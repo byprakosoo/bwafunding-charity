@@ -6,8 +6,7 @@
     import Footer from '../components/Footer.svelte'
     
     import { charities } from '../data/charities.js'
-
-    // let title = "Charity";
+    
 </script>
 
 <Header />

@@ -22,10 +22,11 @@
         return Math.round(Math.abs(delta / oneDay))
     }
 
-    function handleButton(){
+    function handleButton() {
         isModalOpen = true
     }
-    function handleCloseModal(){
+
+    function handleCloseModal() {
         isModalOpen = false
     }
 </script>
@@ -34,7 +35,8 @@
     .xs-list-with-content {
         font-size: 12px;
     }
-    .show{
+
+    .show {
         display: block;
         background: rgba(0, 0, 0, .75);
     }
@@ -53,9 +55,9 @@
             <!-- .xs-heading-title END -->
         </div>
         <!-- .row end -->
-        {#if charities !== undefined}
+        <div class="row">
+            {#if charities !== undefined}
             {#each charities as charity}
-            <div class="row">
                 <div class="col-lg-4 col-md-6">
                     <Modal>
                         {#if isModalOpen === true}
@@ -142,17 +144,17 @@
 
                             <span class="xs-separetor"></span>
 
-                            <button on:click={handleButton} data-toggle="modal" data-target="#exampleModal" class="btn btn-primary btn-block">
+                            <a href="/donation/{charity.id}" data-toggle="modal" data-target="#exampleModal" class="btn btn-primary btn-block">
                                 Donate This Cause
-                            </button>
+                            </a>
                         </div>
                         <!-- .xs-item-content END -->
                     </div>
                     <!-- .xs-popular-item END -->
                 </div>
+                {/each}
+                {/if}
             </div>
-            {/each}
-        {/if}
         <!-- .row end -->
     </div>
     <!-- .container end -->
