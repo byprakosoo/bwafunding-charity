@@ -40,6 +40,9 @@
         display: block;
         background: rgba(0, 0, 0, .75);
     }
+    .pledged{
+        margin-left: 2em;
+    }
 </style>
 
 <!-- popularCauses section -->
@@ -56,7 +59,6 @@
         </div>
         <!-- .row end -->
         <div class="row">
-            {#if charities !== undefined}
             {#each charities as charity}
                 <div class="col-lg-4 col-md-6">
                     <Modal>
@@ -126,7 +128,7 @@
 
                             <ul class="xs-list-with-content">
                                 <li>{formatCurrency(charity.pledged)}<span>Pledged</span></li>
-                                <li><span class="number-percentage-count number-percentage" data-value="90"
+                                <li class="pledged"><span class="number-percentage-count number-percentage" data-value="90"
                                         data-animation-duration="3500">{calculateFunded(charity.pledged, charity.target)}</span>% <span>Funded</span></li>
                                 <li>{calculateDaysRemaining(charity.date_end)}<span>Days to go</span></li>
                             </ul>
@@ -153,7 +155,6 @@
                     <!-- .xs-popular-item END -->
                 </div>
                 {/each}
-                {/if}
             </div>
         <!-- .row end -->
     </div>
