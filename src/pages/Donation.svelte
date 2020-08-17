@@ -5,7 +5,7 @@
     import Loader from '../components/Loader.svelte'
 
     export let params;
-    let charity, amount, name, email, agree=false, data=getCharity(params.id);
+    let amount, name, email, agree=false, data=getCharity(params.id);
 
     async function getCharity(id) {
         const res = await fetch(`http://charity-api-bwa.herokuapp.com/charities/${id}`)
@@ -13,29 +13,37 @@
     }
 
     async function handleForm() {
-        charity.pledged += parseInt(amount)
+        data.pledged += parseInt(amount);
         try{
             const res = await fetch(
                 `http://charity-api-bwa.herokuapp.com/charities/${params.id}`,
                 {
-                    method: 'PUT',
+                    method: "PUT",
                     headers: {
                         "content-type": "application/json"
                     },
-                    body: JSON.stringify(charity)
+                    body: JSON.stringify(data)
                 }
             )
-            console.log(res);
-            router.redirect('/success')
+            const resMid = await fetch(`/.netlify/functions/payment`, 
+            {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: params.id,
+                    amount: parseInt(amount),
+                    name,
+                    email,
+                })
+            })
+            const dataMidtrans = resMid.json();
+            console.log(dataMidtrans);
         }   catch(err){
             console.log(err);
         }
     }
-
-    function handleButtonClick() {
-        console.log("Button Clicked!")
-    }
-
 </script>
 
 <style>
@@ -115,7 +123,7 @@
                                 <label for="xs-donate-agree">I Agree<span class="color-light-red">**</span></label> 
                             </div>
                             <!-- .xs-input-group END -->
-                            <button type="submit" on:click|once={handleButtonClick} disabled="{!agree}" class="btn btn-warning"><span class="badge"><i
+                            <button type="submit" disabled="{!agree}" class="btn btn-warning"><span class="badge"><i
                                         class="fa fa-heart"></i></span> Donate
                                 now</button>
                         </form>
