@@ -1,45 +1,51 @@
 <script>
+    import { onMount } from 'svelte'
     import router from 'page'
     import Header from '../components/Header.svelte'
     import Footer from '../components/Footer.svelte'
     import Loader from '../components/Loader.svelte'
 
     export let params;
-    let amount, name, email, agree=false, data=getCharity(params.id);
+    let charity, amount, name, email, agree = false;
+    // let data = getCharity(params.id);
 
     async function getCharity(id) {
-        const res = await fetch(`http://charity-api-bwa.herokuapp.com/charities/${id}`)
+        const res = await fetch(`http://localhost:3000/charities/${id}`);
         return res.json();
     }
-
-    async function handleForm() {
-        data.pledged += parseInt(amount);
+    onMount(async () => {
+        charity = await getCharity(params.id)
+        console.log(charity)
+    })
+    async function handleForm(event) {
+        charity.pledged = charity.pledged + parseInt(amount);
+        console.log(charity)
         try{
             const res = await fetch(
-                `http://charity-api-bwa.herokuapp.com/charities/${params.id}`,
+                `http://localhost:3000/charities/${params.id}`,
                 {
                     method: "PUT",
                     headers: {
                         "content-type": "application/json"
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(charity)
                 }
-            )
-            const resMid = await fetch(`/.netlify/functions/payment`, 
-            {
+            );
+            const resMid = await fetch(`/.netlify/functions/payment`, {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     id: params.id,
                     amount: parseInt(amount),
                     name,
                     email,
-                })
-            })
-            const dataMidtrans = resMid.json();
-            console.log(dataMidtrans);
+                }),
+            });
+            const midtransData = await resMid.json();
+            console.log(midtransData);
+            window.location.href = midtransData.url;
         }   catch(err){
             console.log(err);
         }
@@ -66,9 +72,9 @@
 <Header />
 <!-- welcome section -->
 <!--breadcumb start here-->
-{#await data}
+{#if !charity}
 <Loader />
-{:then charity}
+{:else}
 <section class="xs-banner-inner-section parallax-window"
     style="background-image:url('/assets/images/kat-yukawa-K0E6E0a0R3A-unsplash.jpg')">
     <div class="xs-black-overlay"></div>
@@ -137,5 +143,5 @@
     </section>
     <!-- End donation form section -->
 </main>
-{/await}
+{/if}
 <Footer />

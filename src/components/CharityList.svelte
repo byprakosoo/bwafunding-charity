@@ -1,5 +1,6 @@
 <script>
     import Modal from './Modal.svelte';
+    import Loader from './Loader.svelte';
 
     export let charities;
     let isModalOpen = false;
@@ -61,8 +62,8 @@
         <div class="row">
             {#each charities as charity}
                 <div class="col-lg-4 col-md-6">
+                    {#if isModalOpen === true}
                     <Modal>
-                        {#if isModalOpen === true}
                             <!-- modal goes here -->
                             <!-- Modal -->
                             <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog"
@@ -104,8 +105,8 @@
                                     </div>
                                 </div>
                             </div>
-                        {/if}
-                    </Modal>
+                        </Modal>
+                    {/if}
                     <div class="xs-popular-item xs-box-shadow">
                         <div class="xs-item-header">
 
@@ -154,6 +155,8 @@
                     </div>
                     <!-- .xs-popular-item END -->
                 </div>
+                {:else}
+                    <Loader />
                 {/each}
             </div>
         <!-- .row end -->
