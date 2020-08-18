@@ -1,34 +1,27 @@
 <script>
-    import { onMount } from 'svelte'
+    import { charity, getCharity } from '../store/data'
+    import { params } from '../store/page'
+
     import router from 'page'
     import Header from '../components/Header.svelte'
     import Footer from '../components/Footer.svelte'
     import Loader from '../components/Loader.svelte'
 
-    export let params;
-    let charity, amount, name, email, agree = false;
-    // let data = getCharity(params.id);
-
-    async function getCharity(id) {
-        const res = await fetch(`http://localhost:3000/charities/${id}`);
-        return res.json();
-    }
-    onMount(async () => {
-        charity = await getCharity(params.id)
-        console.log(charity)
-    })
+    let amount, name, email, agree = false;
+    getCharity($params.id)
+    
     async function handleForm(event) {
-        charity.pledged = charity.pledged + parseInt(amount);
-        console.log(charity)
+        const newData = await getCharity($params.id);
+        newData.pledged = newData.pledged + parseInt(amount);
         try{
             const res = await fetch(
-                `http://localhost:3000/charities/${params.id}`,
+                `http://localhost:3000/charities/${$params.id}`,
                 {
                     method: "PUT",
                     headers: {
                         "content-type": "application/json"
                     },
-                    body: JSON.stringify(charity)
+                    body: JSON.stringify(newData)
                 }
             );
             const resMid = await fetch(`/.netlify/functions/payment`, {
@@ -37,14 +30,14 @@
                     "content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: params.id,
+                    id: $params.id,
                     amount: parseInt(amount),
                     name,
                     email,
                 }),
             });
             const midtransData = await resMid.json();
-            console.log(midtransData);
+            // console.log(midtransData);
             window.location.href = midtransData.url;
         }   catch(err){
             console.log(err);
@@ -72,7 +65,7 @@
 <Header />
 <!-- welcome section -->
 <!--breadcumb start here-->
-{#if !charity}
+{#if !$charity}
 <Loader />
 {:else}
 <section class="xs-banner-inner-section parallax-window"
@@ -81,7 +74,7 @@
     <div class="container">
         <div class="color-white xs-inner-banner-content">
             <h2>Donate Now</h2>
-            <p>{charity.title}</p>
+            <p>{$charity.title}</p>
             <ul class="xs-breadcumb">
                 <li class="badge badge-pill badge-primary">
                     <a href="/" class="color-white">Home /</a> Donate
@@ -98,13 +91,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
-                    <div class="xs-donation-form-images"><img src="{charity.thumbnail}" class="img-responsive"
+                    <div class="xs-donation-form-images"><img src="{$charity.thumbnail}" class="img-responsive"
                             alt="Family Images"></div>
                 </div>
                 <div class="col-lg-6">
                     <div class="xs-donation-form-wraper">
                         <div class="xs-heading xs-mb-30">
-                            <h2 class="xs-title">{charity.title}</h2>
+                            <h2 class="xs-title">{$charity.title}</h2>
                             <p class="small">To learn more about make donate charity
                                 with us visit our "<span class="color-green">Contact
                                     us</span>" site. By calling <span class="color-green">+44(0) 800 883 8450</span>.

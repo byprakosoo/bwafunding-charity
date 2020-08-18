@@ -17,7 +17,7 @@ exports.handler = function (event, context, callback) {
 
     const names = name.split(' ');
     let first_name, last_name;
-
+    console.log(name)
     if (names && names.length > 1) {
         first_name = names[0];
         last_name = names[1];
@@ -28,7 +28,7 @@ exports.handler = function (event, context, callback) {
 
     const parameters = {
         transaction_details: {
-            order_id: `BWACHA-${id}-${+new Date()}`,
+            order_id: `ZARAH-${id}-${+new Date()}`,
             gross_amount: parseInt(amount)
         },
         customer_details: {
