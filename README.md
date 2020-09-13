@@ -1,3 +1,12 @@
 # Charity Svelte App
 
-Ini adalah studi kasus course svelte di https://buildwithangga.com
+Donation page inspired by Kitabisa.com using *Svelte.JS* and *Midtrans* for the payment gateway. You could visit this link https://zarah.netlify.app for demo.
+
+## Install Node Library
+
+`npm install`
+
+## Run Development Mode
+
+`npm run start-dev`
+
