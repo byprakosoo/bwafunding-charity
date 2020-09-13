@@ -1,6 +1,6 @@
 # Charity Svelte App
 
-Halaman Donasi untuk beberapa project sosial ala Kitabisa.com menggunakan *Svelte.JS* dan payment gateway *Midtrans*
+Donation page inspired by Kitabisa.com using *Svelte.JS* and *Midtrans* for the payment gateway. You could visit this link https://zarah.netlify.app for demo.
 
 ## Install Node Library
 
