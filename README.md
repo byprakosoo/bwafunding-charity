@@ -8,5 +8,5 @@ Donation page inspired by Kitabisa.com using *Svelte.JS* and *Midtrans* for the 
 
 ## Run Development Mode
 
-`npm run start-dev`
+`npm run dev`
 
